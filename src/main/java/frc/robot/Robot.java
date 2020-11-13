@@ -8,6 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -30,7 +32,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   public static CANSparkMax HuddysSpark;
-
+  public static XboxController Controller;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -42,10 +44,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     HuddysSpark = new CANSparkMax(1, MotorType.kBrushless);
+    Controller = new XboxController(1);
 
-    HuddysSpark.setIdleMode(IdleMode.kBrake);
-    
-
+    Spark.setIdleMode(IdleMode.kBrake);
   }
 
   /**
@@ -58,7 +59,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    
   }
 
   /**
@@ -100,9 +100,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
-    HuddysSpark.set(0);
-  
+    HuddysSpark.set(Controller.getTriggerAxis(Hand.kLeft));
   }
 
   /**
