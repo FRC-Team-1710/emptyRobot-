@@ -31,8 +31,9 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private static boolean isBrake = true;
+  private static CANSparkMax motors = [HuddysSpark, Sparky];
 
-  public static CANSparkMax HuddysSpark;
+  public static CANSparkMax HuddysSpark, Sparky;
   public static XboxController controller;
 
   /**
@@ -45,9 +46,12 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    HuddysSpark = new CANSparkMax(1, MotorType.kBrushless);
+    HuddysSpark = new CANSparkMax(5, MotorType.kBrushless);
+    Sparky = new CANSparkMax(6, MotorType.kBrushless);
+    
 
     HuddysSpark.setIdleMode(IdleMode.kBrake);
+    Sparky.setIdleMode(IdleMode.kBrake);
 
     controller = new XboxController(0);
 
@@ -109,6 +113,7 @@ public class Robot extends TimedRobot {
 
     //Move (untested)
     HuddysSpark.set(controller.getTriggerAxis(Hand.kLeft));
+    Sparky.set(;
 
     //Brake Coast Toggle (untested)
     if(controller.getRawButton(10)) {
@@ -119,6 +124,14 @@ public class Robot extends TimedRobot {
         isBrake = true;
         HuddysSpark.setIdleMode(IdleMode.kBrake);
       }
+    }
+
+    //sets sparkys idlemode to follow HuddysSpark idlemode
+    Sparky.setIdleMode(HuddysSpark.getIdleMode());
+
+    //i = 1 because setting huddysSpark = huddysSpark is not needed. This should cause every motor to follow idle mode of huddysSpark
+    for(int i=1; i<motors.len(); i++) {
+      motors[i].setIdleMode(HuddysSpark.getIdleMode());
     }
   
   }
