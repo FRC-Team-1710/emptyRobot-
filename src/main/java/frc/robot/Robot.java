@@ -48,14 +48,8 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    HuddysSpark = new CANSparkMax(5, MotorType.kBrushless);
-
-    Controller = new XboxController(1);
-
-
-    HuddysSpark.setIdleMode(IdleMode.kBrake);
-    
-
+    encoder.initEncoder();
+    motorOut.motorInit();
   }
 
   /**
@@ -110,9 +104,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
-    HuddysSpark.set(Controller.getRawAxis(5));
-  
+    //HuddysSpark.set(Controller.getRawAxis(5));
+    if(Controller.getRawButtonPressed(0)){
+      motorOut.Spark.setVoltage(0);
+    }if(Controller.getRawButtonPressed(1)){
+      motorOut.Spark.setVoltage(1.66);
+    }if(Controller.getRawButtonPressed(2)){
+      motorOut.Spark.setVoltage(3.33);
+    }if(Controller.getRawButtonPressed(3)){
+      motorOut.Spark.setVoltage(5);
+    }
   }
 
   /**
