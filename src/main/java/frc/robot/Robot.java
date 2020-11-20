@@ -49,11 +49,11 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    CoopersSpark = new CANSparkMax(1, MotorType.kBrushless);
+    CoopersSpark = new CANSparkMax(5, MotorType.kBrushless);
 
     CoopersSpark.setIdleMode(IdleMode.kBrake);
 
-    Controller = new XboxController(1);
+    Controller = new XboxController(0);
   }
 
   /**
@@ -114,6 +114,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+      if(Controller.getStickButtonPressed(Hand.kRight)){
+        CoopersSpark.setIdleMode(IdleMode.kCoast);
+        }
+      else{
+        CoopersSpark.setIdleMode(IdleMode.kBrake);
+      }
       
     CoopersSpark.set(Controller.getTriggerAxis(Hand.kLeft));
 
