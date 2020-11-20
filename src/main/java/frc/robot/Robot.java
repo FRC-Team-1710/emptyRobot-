@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-//import com.revrobotics.CANEncoder;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public XboxController controller = new XboxController(1);
-  public CANSparkMax Spark = new CANSparkMax(1, MotorType.kBrushless);
+  public static CANSparkMax Spark;
   public static CANSparkMax HuddysSpark;
 
   /**
@@ -44,7 +44,8 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    HuddysSpark = new CANSparkMax(1, MotorType.kBrushless);
+    //HuddysSpark = new CANSparkMax(5, MotorType.kBrushless);
+    Spark = new CANSparkMax(5, MotorType.kBrushless);
     Spark.setIdleMode(IdleMode.kBrake);
     
 
