@@ -30,9 +30,10 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private static boolean isBrake = true;
 
   public static CANSparkMax HuddysSpark;
-  public static XboxController CharliesController;
+  public static XboxController controller;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -48,8 +49,8 @@ public class Robot extends TimedRobot {
 
     HuddysSpark.setIdleMode(IdleMode.kBrake);
 
-    CharliesController = new XboxController(0);
-    
+    controller = new XboxController(0);
+
 
   }
 
@@ -106,7 +107,19 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    HuddysSpark.set(CharliesController.getTriggerAxis(Hand.kLeft));
+    //Move (untested)
+    HuddysSpark.set(controller.getTriggerAxis(Hand.kLeft));
+
+    //Brake Coast Toggle (untested)
+    if(controller.getRawButton(10)) {
+      if(isBrake) {
+        isBrake = false;
+        HuddysSpark.setIdleMode(IdleMode.kCoast);
+      } else if(!isBrake) {
+        isBrake = true;
+        HuddysSpark.setIdleMode(IdleMode.kBrake);
+      }
+    }
   
   }
 
