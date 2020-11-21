@@ -11,14 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 
 /**
@@ -34,8 +27,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  public static CANSparkMax CoopersSpark;
-  public static XboxController Controller;
+ 
   
   
 
@@ -49,11 +41,10 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    CoopersSpark = new CANSparkMax(5, MotorType.kBrushless);
+    encoder.initEncoder();
+    MotorOut.motorInit();
 
-    CoopersSpark.setIdleMode(IdleMode.kBrake);
-
-    Controller = new XboxController(0);
+    
   }
 
   /**
@@ -114,16 +105,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-      if(Controller.getStickButtonPressed(Hand.kRight)){
-        CoopersSpark.setIdleMode(IdleMode.kCoast);
-        }
-      else{
-        CoopersSpark.setIdleMode(IdleMode.kBrake);
-      }
-      
-    CoopersSpark.set(Controller.getTriggerAxis(Hand.kLeft));
-
-    }
+    
+  }
   /**
    * This function is called once when the robot is disabled.
    */
