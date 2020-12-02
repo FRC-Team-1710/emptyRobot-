@@ -21,6 +21,7 @@ public class encoder {
         SmartDashboard.putNumber("encoder Position", Encoder.getValue());
     }
     public static double getEncoderVal(){
+        val = Encoder.getValue();
         SmartDashboard.putNumber("encoder Position", val);
         return val;
     }

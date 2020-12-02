@@ -10,12 +10,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.AnalogInput;
 
 /*import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-
-
-
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -33,8 +31,7 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
-
+  private static AnalogInput AI_encoder;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -101,8 +98,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
-  
+  if (motorOut.getPosition() >= 360){
+    AI_encoder.resetAccumulator();
+  }
+  motorOut.setPosition();
   }
 
   /**
