@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class encoder {
     public static AnalogInput Encoder;
-public static double val;
+    public static double val;
     public static void encoderInit(){
         Encoder = new AnalogInput(0);
         SmartDashboard.putNumber("encoder Position", Encoder.getValue());
