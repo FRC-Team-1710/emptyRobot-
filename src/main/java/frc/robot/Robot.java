@@ -12,10 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 
 
 /**
@@ -31,8 +28,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public XboxController controller = new XboxController(1);
-  public static CANSparkMax Spark;
-  public static CANSparkMax HuddysSpark;
+  
 
   /**
    * This function is run when the robot is first started up and should be
@@ -40,14 +36,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    //HuddysSpark = new CANSparkMax(5, MotorType.kBrushless);
-    Spark = new CANSparkMax(5, MotorType.kBrushless);
-    Spark.setIdleMode(IdleMode.kBrake);
-    
+    encoder.initEncoder();
+
+    motorOut.motorInit();
 
   }
 
@@ -103,8 +99,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-Spark.set(controller.getY(Hand.kRight));
-//    HuddysSpark.set(0);
+
   
   }
 
