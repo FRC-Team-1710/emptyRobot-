@@ -24,7 +24,7 @@ public class motorOut {
     }
 
     public static void setPosition(double pos){
-
+        Spark.setVoltage(pos);
     }
 
     public static double getPosition(){
