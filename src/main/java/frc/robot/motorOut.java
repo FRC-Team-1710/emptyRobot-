@@ -30,14 +30,17 @@ public class motorOut {
         if(xboxController.getAButton() && getPosition() != 180){
             Spark.set(.6);
         }
-        if(xboxController.getBButton() && getPosition() != 90){
+        else if(xboxController.getBButton() && getPosition() != 90){
             Spark.set(.6);
         }
-        if(xboxController.getXButton() && getPosition() != 270){
+        else if(xboxController.getXButton() && getPosition() != 270){
             Spark.set(.6);
         }
-        if(xboxController.getYButton() && getPosition() != 0){
+        else if(xboxController.getYButton() && getPosition() != 0){
             Spark.set(.6);
+        }
+        else{
+            Spark.set(.0);
         } //All this looks too simple for the time I spent on it
     }
     
