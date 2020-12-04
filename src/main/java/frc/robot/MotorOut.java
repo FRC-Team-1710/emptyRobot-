@@ -19,8 +19,9 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class MotorOut {
 public static CANSparkMax CoopersSpark;
 public static XboxController Controller;
-public static int destination; //setting an interger "destination" that will be used later
+public static double destination; //setting a double "destination" that will be used later
 public static double speed;
+public static double closestQuad;
     public static void motorInit() {
         CoopersSpark = new CANSparkMax(4, MotorType.kBrushless);
 
@@ -54,6 +55,35 @@ public static double speed;
            speed = (pos - destination) / 360;
            CoopersSpark.set(speed); 
         }
+
+        double xAxis = Controller.getX(Hand.kLeft);
+        double yAxis = Controller.getY(Hand.kLeft);
+        double offsetDistance = Math.tan(xAxis / yAxis);
+        if(pos >= 315){
+        closestQuad = 0;
+        }
+        if(pos <= 45){
+        closestQuad = 0;
+        }
+        if(pos > 45){
+        closestQuad = 90;
+        }
+        if(pos < 135){
+        closestQuad = 90;
+        }
+        if(pos >= 135){
+        closestQuad = 180;
+        }
+        if(pos <= 225){
+        closestQuad = 180;
+        }
+        if(pos > 225){
+        closestQuad = 270;
+        }
+        if(pos < 315){
+        closestQuad = 270;
+        }
+        //destination = closestQuad + offsetDistance;
 }
 public static double getPosition(){
     return encoder.getEncoderVal();
