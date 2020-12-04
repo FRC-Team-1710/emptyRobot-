@@ -106,7 +106,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     
-   
+   MotorOut.setPosition(MotorOut.getPosition());
+
   }
   /**
    * This function is called once when the robot is disabled.

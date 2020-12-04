@@ -21,37 +21,42 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class MotorOut {
 public static CANSparkMax CoopersSpark;
 public static XboxController Controller;
-public static int destination;
+public static int destination; //setting an interger "destination" that will be used later
     public static void motorInit() {
-        CoopersSpark = new CANSparkMax(5, MotorType.kBrushless);
+        CoopersSpark = new CANSparkMax(4, MotorType.kBrushless);
 
         CoopersSpark.setIdleMode(IdleMode.kBrake);
 
         Controller = new XboxController(0);
-
-        encoder.initEncoder();
     }
 
     public static void setPosition(double pos) {
-        boolean yB = Controller.getYButtonPressed();
+        boolean yB = Controller.getYButtonPressed(); //setting variables for if the button was pressed
         boolean xB = Controller.getXButtonPressed();
         boolean aB = Controller.getAButtonPressed();
         boolean bB = Controller.getBButtonPressed();
-        if (yB = true) {
-            destination = 0;
-        }
         if (xB = true) {
-            destination = 270;
+            destination = 0; //the Y button is the top so it is set to 0 degrees
         }
-        if (bB = true) {
-            destination = 90;
+        if (Controller.getXButtonPressed()) {
+            destination = 270; //the X button is on the left so it is set to 270 degrees
         }
-        if (aB = true) {
-           destination = 180;
+        if (Controller.getBButtonPressed()) {
+            destination = 90; //the B button is on the right so it is set to 90 degrees
+        }
+        if (Controller.getAButtonPressed()) {
+           destination = 180; //the A button is on the bottom so it is set to 180 degrees
         }
         
-        double speed = 1/360 * (pos - destination);
-       CoopersSpark.set(speed); 
+        /*
+        In the eqation below, it is using the destination and subtracting it from the current position.
+        This will give the distance the motor is from its target.
+        It uses a constant (1/360) so that the speed will be between -1 and 1 (the speed vaules the mortor can use).
+        It then uses this distance to determine the speed that the motor should be moving until finally reaching 0.
+        This ensures that the motor will stop safely and percisely on the target.
+        */
+        double speed = 1/360 * (pos - destination); 
+        CoopersSpark.set(speed); 
 
 }
 public static double getPosition(){
