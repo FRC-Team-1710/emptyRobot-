@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     
-   MotorOut.setPosition(MotorOut.getPosition());
+   MotorOut.setPosition(180);
 
   }
   /**
