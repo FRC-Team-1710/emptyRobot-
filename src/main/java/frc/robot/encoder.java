@@ -7,8 +7,24 @@
 
 package frc.robot;
 
-/**
- * Add your docs here.
- */
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class encoder {
+
+    public static AnalogInput Encoder;
+    public static double val;
+    public static void initEncoder(){
+
+        Encoder = new AnalogInput(0);
+        SmartDashboard.putNumber("encoder Position", Encoder.getValue());
+        
+    }
+    public static double getEncoderVal(){      
+        
+        val = Encoder.getValue();
+        SmartDashboard.putNumber("encoder Position", val);
+        return val;
+
+    }
 }

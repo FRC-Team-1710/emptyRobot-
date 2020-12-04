@@ -16,22 +16,45 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
+
+
 public class MotorOut {
 public static CANSparkMax CoopersSpark;
 public static XboxController Controller;
+public static int destination;
+    public static void motorInit() {
+        CoopersSpark = new CANSparkMax(5, MotorType.kBrushless);
 
-public static void motorInit(){
-CoopersSpark = new CANSparkMax(5, MotorType.kBrushless);
+        CoopersSpark.setIdleMode(IdleMode.kBrake);
 
-    CoopersSpark.setIdleMode(IdleMode.kBrake);
+        Controller = new XboxController(0);
 
-    Controller = new XboxController(0);
-}
-public static void setPosition(double pos){
+        encoder.initEncoder();
+    }
+
+    public static void setPosition(double pos) {
+        boolean yB = Controller.getYButtonPressed();
+        boolean xB = Controller.getXButtonPressed();
+        boolean aB = Controller.getAButtonPressed();
+        boolean bB = Controller.getBButtonPressed();
+        if (yB = true) {
+            destination = 0;
+        }
+        if (xB = true) {
+            destination = 270;
+        }
+        if (bB = true) {
+            destination = 90;
+        }
+        if (aB = true) {
+           destination = 180;
+        }
+        
+        double speed = 1/360 * (pos - destination);
+       CoopersSpark.set(speed); 
 
 }
 public static double getPosition(){
-
-    return 0;
+    return encoder.getEncoderVal();
 }
 }
