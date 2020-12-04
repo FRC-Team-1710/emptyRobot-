@@ -56,6 +56,7 @@ public static double closestQuad;
            CoopersSpark.set(speed); 
         }
 
+/*
         double xAxis = Controller.getX(Hand.kLeft);
         double yAxis = Controller.getY(Hand.kLeft);
         double offsetDistance = Math.tan(xAxis / yAxis);
@@ -83,7 +84,12 @@ public static double closestQuad;
         if(pos < 315){
         closestQuad = 270;
         }
-        //destination = closestQuad + offsetDistance;
+        destination = closestQuad + offsetDistance;
+        speed = (pos - destination) / 360
+        CoopersSpark.set(speed);
+*/
+
+
 }
 public static double getPosition(){
     return encoder.getEncoderVal();
