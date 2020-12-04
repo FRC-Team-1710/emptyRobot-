@@ -20,7 +20,9 @@ public class motorOut {
     public static CANSparkMax Spark;
     private static XboxController xboxController = new XboxController(1);
     private static BigDecimal Adegree = new BigDecimal(180.0);
-
+    private static BigDecimal Bdegree = new BigDecimal(90.0);
+    private static BigDecimal Xdegree = new BigDecimal(270.0);
+    private static BigDecimal Ydegree = new BigDecimal(0.0);
     public static void motorInit() {
         Spark = new CANSparkMax(4, MotorType.kBrushless);
         Spark.setIdleMode(IdleMode.kBrake);
@@ -41,19 +43,19 @@ public class motorOut {
             Spark.set(speed);
         }
         else if(xboxController.getBButton() && getPosition() != 90){
-            Distance = Adegree.subtract(Position);
+            Distance = Bdegree.subtract(Position);
             Speed = Distance.multiply(k);
             speed = Speed.doubleValue();
             Spark.set(speed);
         }
         else if(xboxController.getXButton() && getPosition() != 270){
-            Distance = Adegree.subtract(Position);
+            Distance = Xdegree.subtract(Position);
             Speed = Distance.multiply(k);
             speed = Speed.doubleValue();
             Spark.set(speed);
         }
         else if(xboxController.getYButton() && getPosition() != 0){
-            Distance = Adegree.subtract(Position);
+            Distance = Ydegree.subtract(Position);
             Speed = Distance.multiply(k);
             speed = Speed.doubleValue();
             Spark.set(speed);
