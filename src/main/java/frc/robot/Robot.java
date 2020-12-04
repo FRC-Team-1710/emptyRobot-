@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
   if (motorOut.getPosition() >= 360){
-    AI_encoder.resetAccumulator();
+    AI_encoder.resetAccumulator();    //Don't know whether it will actually reset the count or not
   }
   motorOut.setPosition();
   }
