@@ -107,17 +107,37 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    //HuddysSpark.set(Controller.getRawAxis(5));
-    if(Controller.getRawButtonPressed(0)){
+    //Spark.set(Controller.getRawAxis(5));
+    
+    /*if(Controller.getRawButtonPressed(1)){
+      motorOut.setPosition(90);
+    }else if(Controller.getRawButtonPressed(2)){
       motorOut.setPosition(0);
-    }if(Controller.getRawButtonPressed(1)){
-      motorOut.setPosition(1.66);
-    }if(Controller.getRawButtonPressed(2)){
-      motorOut.setPosition(3.33);
-    }if(Controller.getRawButtonPressed(3)){
-      motorOut.setPosition(5);
+    }else if(Controller.getRawButtonPressed(3)){
+      motorOut.setPosition(180);
+    }else if(Controller.getRawButtonPressed(4)){
+      motorOut.setPosition(270);
+    }*/
+    switch(motorOut.getQuadrant(Controller.getRawAxis(0), Controller.getRawAxis(1))){
+      case 1:
+      motorOut.setPosition(Math.tanh(Controller.getRawAxis(0)/Controller.getRawAxis(1))+270);
+      SmartDashboard.putNumber("Directional Input", Math.tanh(Controller.getRawAxis(0)/Controller.getRawAxis(1))+270);
+      break;
+      case 2:
+      motorOut.setPosition(Math.tanh(Controller.getRawAxis(1)/Controller.getRawAxis(0)));
+      SmartDashboard.putNumber("Directional Input", Math.tanh(Controller.getRawAxis(1)/Controller.getRawAxis(0)));
+      break;
+      case 3:
+      motorOut.setPosition(Math.tanh(Controller.getRawAxis(0)/Controller.getRawAxis(1))+90);
+      SmartDashboard.putNumber("Directional Input", Math.tanh(Controller.getRawAxis(0)/Controller.getRawAxis(1))+90);
+      break;
+      case 4:
+      motorOut.setPosition(Math.tanh(Controller.getRawAxis(1)/Controller.getRawAxis(0))+180);
+      SmartDashboard.putNumber("Directional Input", Math.tanh(Controller.getRawAxis(1)/Controller.getRawAxis(0))+180);
+      break;
     }
 
+    motorOut.Spark.set((motorOut.destination-motorOut.getPosition())*0.1);
   }
 
   /**
