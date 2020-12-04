@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-
-
 public class MotorOut {
 public static CANSparkMax CoopersSpark;
 public static XboxController Controller;
@@ -29,13 +27,8 @@ public static int destination; //setting an interger "destination" that will be 
 
         Controller = new XboxController(0);
     }
-
     public static void setPosition(double pos) {
-        boolean yB = Controller.getYButtonPressed(); //setting variables for if the button was pressed
-        boolean xB = Controller.getXButtonPressed();
-        boolean aB = Controller.getAButtonPressed();
-        boolean bB = Controller.getBButtonPressed();
-        if (xB = true) {
+        if (Controller.getYButtonPressed()) {
             destination = 0; //the Y button is the top so it is set to 0 degrees
         }
         if (Controller.getXButtonPressed()) {
@@ -57,7 +50,6 @@ public static int destination; //setting an interger "destination" that will be 
         */
         double speed = 1/360 * (pos - destination); 
         CoopersSpark.set(speed); 
-
 }
 public static double getPosition(){
     return encoder.getEncoderVal();
