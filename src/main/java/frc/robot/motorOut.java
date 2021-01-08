@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  */
 public class motorOut {
     public static CANSparkMax Spark;
-    private static XboxController xboxController = new XboxController(1);
+    private static XboxController xboxController = new XboxController(0);
     private static BigDecimal Adegree = new BigDecimal(180.0);
     private static BigDecimal Bdegree = new BigDecimal(90.0);
     private static BigDecimal Xdegree = new BigDecimal(270.0);
@@ -36,12 +36,12 @@ public class motorOut {
         BigDecimal Speed = new BigDecimal(0);
         double speed;
         //This should all work in theory
-        if(xboxController.getAButton() && getPosition() != 180){
-            Distance = Adegree.subtract(Position);
+        if(xboxController.getAButton() && (getPosition() >= 190 || getPosition() <= 170)){//Made a range so that it will at least be aproximatly right
+            Distance = Adegree.subtract(Position);                                        //Setting it to 180 is too small for it to work properly I think
             Speed = Distance.multiply(k);
             speed = Speed.doubleValue();
             Spark.set(speed);
-        }
+        }//Haven't changed the bottom ones
         else if(xboxController.getBButton() && getPosition() != 90){
             Distance = Bdegree.subtract(Position);
             Speed = Distance.multiply(k);
