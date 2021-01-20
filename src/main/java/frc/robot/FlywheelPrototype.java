@@ -1,3 +1,11 @@
+/*
+THINGS TO KNOW
+4 inch flywheel
+??? desired RPM
+2 to 1 gear ratio
+2 motors (neo) (built in encoder)
+1 motor needs to turn in reverse(?)
+*/
 package frc.robot;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -8,35 +16,41 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class FlywheelPrototype{
     //the motors are marked with m
     //the encoders are marked with e
-    public static CANSparkMax m_flyOne;
-    public static CANEncoder e_flyOne;
+    public static CANSparkMax m_flyOne, m_flyTwo;
+    public static CANEncoder e_flyOne, e_flyTwo;
     public static double kP, kI, kD, kFF, maxOut, minOut, maxRPM, destination;
     public static boolean firstRun;
 
     public static void Shooter(){
-        //Update first parameter to CAN ID of the flywheel's motor controller
+        //Update first parameter to CAN IDs of the flywheels' motor controller
         m_flyOne = new CANSparkMax(0, MotorType.kBrushless);
+        m_flyTwo = new CANSparkMax(0, MotorType.kBrushless);
         e_flyOne = m_flyOne.getEncoder();
+        e_flyTwo = m_flyTwo.getEncoder();
         m_flyOne.setIdleMode(IdleMode.kCoast);
+        m_flyTwo.setIdleMode(IdleMode.kCoast);
         //m_flyOne.set(0);
 
         //setting the variables
-        kP = 0.0002;
-        kI = 0.000000000001;
-        kD = 0;
-        kFF = 0;
-        maxOut = 1;
-        minOut = -1;
-        maxRPM = 0;
-        destination = 1000;
+        kP = 0.0002; //will find better value during testing
+        kI = 0.000000000001; //will find better value during testing
+        kD = 0; //not needed
+        kFF = 0; //not needed
+        maxOut = 1; //max value a .set(speed) command will take is 1
+        minOut = -1; //min value a .set(speed) command will take is -1
+        destination = 10000; //desired RPM of the flywheels
 
-        //setting the flywheel's speed to the output of the PID loop
-        double setFlySpeed = (getOutput(kP, kI, kD, kFF, maxOut, minOut, destination));  
-        m_flyOne.set(setFlySpeed); 
+        setFlySpeed(destination); //setting the flywheels' speed
     }
-public static double getOutput(double p, double i, double d, double f, double maxOut, double minOut, double desOut){
+public static void setFlySpeed(double desRPM){
+    //setting the first flywheel's speed
+    m_flyOne.set(flyWheelPID(kP, kI, kD, kFF, maxOut, minOut, desRPM, e_flyOne.getVelocity()));
+    //setting the second flywheel's speed (this one is negative (apparently one of the motors needs to spin the other way?) may change later)
+    m_flyTwo.set(-1 * flyWheelPID(kP, kI, kD, kFF, maxOut, minOut, desRPM, e_flyTwo.getVelocity()));
+}
+public static double flyWheelPID(double p, double i, double d, double f, double maxOut, double minOut, double desOut, double flyOut){
     //setting some more variables
-    double actOut = e_flyOne.getVelocity();
+    double actOut = flyOut;
     double error = desOut - actOut;
     double errorSum = 0;
     double maxError = 0;
@@ -47,7 +61,7 @@ public static double getOutput(double p, double i, double d, double f, double ma
     }
     double pVal = p * error; //setting P Value
     double ffVal = f * destination; //setting FF Value
-    if(firstRun){ //the first run won't have a last output so we set it to 
+    if(firstRun){ //the first run won't have a last output so we set it
         lastAct = actOut;
         firstRun = false;
     }
