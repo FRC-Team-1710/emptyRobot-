@@ -19,11 +19,11 @@ public class encoder {
 
     public static void initEncoder(){
         Encoder = new AnalogInput(0);
-        SmartDashboard.putNumber("encoder Position", Encoder.getValue());
+        SmartDashboard.putNumber("Encoder Position", Encoder.getValue());
     }
 
     public static double getEncoderVal(){
-        SmartDashboard.putNumber("encoder Position", Encoder.getValue());
+        SmartDashboard.putNumber("Encoder Position", Encoder.getValue());
         return Encoder.getValue();
     }
 }

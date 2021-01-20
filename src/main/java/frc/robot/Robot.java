@@ -13,10 +13,8 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-
-
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -35,6 +33,8 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  private double multiplier = 1;
 
   public static CANSparkMax Spark;
   public static XboxController Controller;
@@ -107,37 +107,40 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    //Spark.set(Controller.getRawAxis(5));
+
+    //Reset recorded position if necessary
     
-    /*if(Controller.getRawButtonPressed(1)){
-      motorOut.setPosition(90);
-    }else if(Controller.getRawButtonPressed(2)){
-      motorOut.setPosition(0);
-    }else if(Controller.getRawButtonPressed(3)){
-      motorOut.setPosition(180);
-    }else if(Controller.getRawButtonPressed(4)){
-      motorOut.setPosition(270);
-    }*/
+    //Calculate direction
+    double direction = 0;
     switch(motorOut.getQuadrant(Controller.getRawAxis(0), Controller.getRawAxis(1))){
       case 1:
-      motorOut.setPosition(Math.tanh(Controller.getRawAxis(0)/Controller.getRawAxis(1))+270);
-      SmartDashboard.putNumber("Directional Input", Math.tanh(Controller.getRawAxis(0)/Controller.getRawAxis(1))+270);
+      direction = ((Math.tanh((Math.abs(Controller.getRawAxis(0))/Math.abs(Controller.getRawAxis(1)))))+270);
+      motorOut.setPosition(direction);
+      SmartDashboard.putNumber("Directional Input", direction);
       break;
       case 2:
-      motorOut.setPosition(Math.tanh(Controller.getRawAxis(1)/Controller.getRawAxis(0)));
-      SmartDashboard.putNumber("Directional Input", Math.tanh(Controller.getRawAxis(1)/Controller.getRawAxis(0)));
+      direction = ((Math.tanh((Math.abs(Controller.getRawAxis(1))/Math.abs(Controller.getRawAxis(0))))));
+      motorOut.setPosition(direction);
+      SmartDashboard.putNumber("Directional Input", direction);
       break;
       case 3:
-      motorOut.setPosition(Math.tanh(Controller.getRawAxis(0)/Controller.getRawAxis(1))+90);
-      SmartDashboard.putNumber("Directional Input", Math.tanh(Controller.getRawAxis(0)/Controller.getRawAxis(1))+90);
+      direction = ((Math.tanh((Math.abs(Controller.getRawAxis(0))/Math.abs(Controller.getRawAxis(1)))))+90);
+      motorOut.setPosition(direction);
+      SmartDashboard.putNumber("Directional Input", direction);
       break;
       case 4:
-      motorOut.setPosition(Math.tanh(Controller.getRawAxis(1)/Controller.getRawAxis(0))+180);
-      SmartDashboard.putNumber("Directional Input", Math.tanh(Controller.getRawAxis(1)/Controller.getRawAxis(0))+180);
+      direction = ((Math.tanh((Math.abs(Controller.getRawAxis(1))/Math.abs(Controller.getRawAxis(0)))))+180);
+      motorOut.setPosition(direction);
+      SmartDashboard.putNumber("Directional Input", direction);
       break;
     }
+    encoder.getEncoderVal();
 
-    motorOut.Spark.set((motorOut.destination-motorOut.getPosition())*0.1);
+    //Set motor position via PID
+    double speed = (motorOut.destination-motorOut.getPosition());
+    /*if(Math.abs(Math.abs(motorOut.destination)-Math.abs(motorOut.getPosition()))>180)
+      speed *= -1;*/
+    motorOut.Spark.set(speed);
   }
 
   /**

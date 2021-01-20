@@ -21,18 +21,21 @@ public class motorOut {
     public static CANSparkMax Spark;
     public static CANEncoder Encoder;
 
+    public static double destination = 0;
+
     public static void motorInit(){
         Spark = new CANSparkMax(4, MotorType.kBrushless);
         Spark.setIdleMode(IdleMode.kBrake);
 
         Encoder = Spark.getEncoder();
+        Encoder.setPositionConversionFactor(20);
+        setPosition(0);
     }
 
-    public static double destination = 0;
-
     public static void setPosition(double pos){
-        destination = pos*0.05;
-        SmartDashboard.putNumber("position", getPosition());
+        destination = pos;
+        SmartDashboard.putNumber("Position", getPosition());
+        SmartDashboard.putNumber("Destination", destination);
     }
 
     public static double getPosition(){
@@ -44,13 +47,13 @@ public class motorOut {
      */
     public static int getQuadrant(double x, double y){
         int quadrant = 0;
-        if(x>=0&&y>0){
+        if(x>=0&&y<0){
             quadrant=1;
-        }else if(x>0&&y<=0){
+        }else if(x>0&&y>=0){
             quadrant=2;
-        }else if(x<=0&&y<0){
+        }else if(x<=0&&y>0){
             quadrant=3;
-        }else if(x<0&&y>=0){
+        }else if(x<0&&y<=0){
             quadrant=4;
         }
         return quadrant;
