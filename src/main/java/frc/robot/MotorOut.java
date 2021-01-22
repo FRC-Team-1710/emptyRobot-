@@ -5,6 +5,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+
+
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
@@ -54,10 +56,10 @@ public static double closestQuad;
            CoopersSpark.set(speed); 
         }
 
-/*
-        double xAxis = Controller.getX(Hand.kLeft);
-        double yAxis = Controller.getY(Hand.kLeft);
-        double offsetDistance = Math.tan(xAxis / yAxis);
+
+        //double xAxis = Controller.getX(Hand.kLeft);
+        //double yAxis = Controller.getY(Hand.kLeft);
+        //double offsetDistance = Math.tan(xAxis / yAxis);
         if(pos >= 315){
         closestQuad = 0;
         }
@@ -82,11 +84,9 @@ public static double closestQuad;
         if(pos < 315){
         closestQuad = 270;
         }
-        destination = closestQuad + offsetDistance;
-        speed = (pos - destination) / 360
+        //destination = closestQuad + offsetDistance;
+        speed = (pos - destination) / 360;
         CoopersSpark.set(speed);
-*/
-
 
 }
 public static double getPosition(){

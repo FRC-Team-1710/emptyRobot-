@@ -1,7 +1,7 @@
 /*
 THINGS TO KNOW
 4 inch flywheel
-3700 - 4100 desired RPM (subject to change)
+3750 - desired RPM (subject to change)
 2 to 1 gear ratio
 2 motors (neo) (built in encoder)
 1 motor needs to turn in reverse(?)
@@ -22,7 +22,7 @@ public class FlywheelPrototype{
     public static double kP, kI, kD, kFF, maxRPM, destination;
     public static boolean firstRun;
 
-    public static void Shooter(){
+    public static void FlywheelInit(){
         //Update first parameter to CAN IDs of the flywheels' motor controller
         m_flyOne = new CANSparkMax(0, MotorType.kBrushless);
         m_flyTwo = new CANSparkMax(0, MotorType.kBrushless);
@@ -37,9 +37,6 @@ public class FlywheelPrototype{
         kI = 0.000000000001; //will find better value during testing
         kD = 0; //not needed
         kFF = 0; //not needed
-        destination = 4100; //desired RPM of the flywheels
-
-        setFlySpeed(destination); //setting the flywheels' speed
     }
 public static void setFlySpeed(double desRPM){
     //setting the first flywheel's speed
@@ -49,6 +46,7 @@ public static void setFlySpeed(double desRPM){
     double flyTwoSpeed = -1 * flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyTwo.getVelocity());
     m_flyTwo.set(flyTwoSpeed);
 
+    //displays the current output of the PID loop aswell as the destination and current RPM
     SmartDashboard.putNumber("flyone-pid-out", flyOneSpeed);
     SmartDashboard.putNumber("flytwo-pid-out", flyTwoSpeed);
     SmartDashboard.putNumber("destination", destination);
@@ -60,7 +58,7 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
     double actOut = flyOut;
     double error = desOut - actOut;
     double errorSum = 0;
-    double maxError = 0;
+    double maxError = 4100;
     double lastAct = 0;
     double maxIVal = .1; 
     double maxOut = 1; //max value a .set(speed) command will take is 1
@@ -103,6 +101,6 @@ public static double constrain(double value, double min, double max){
     return value;
 }
 public static boolean bounded(double value, double min, double max){
-    return (min<value) && (value<max);
+    return (min < value) && (value < max);
 }
 }

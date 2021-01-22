@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 
@@ -26,7 +27,7 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
+  public static XboxController Controller;
  
   
   
@@ -41,9 +42,12 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    encoder.initEncoder();
-    MotorOut.motorInit();
+    //encoder.initEncoder();
+    //MotorOut.motorInit();
 
+    FlywheelPrototype.Shooter();
+    Controller = new XboxController(0);
+    
     
   }
 
@@ -105,8 +109,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    
-   //hey
+    boolean aButton = Controller.getAButtonPressed();
+  
+    if(aButton){
+      FlywheelPrototype.setFlySpeed(4100);
+    }
 
   }
   /**
