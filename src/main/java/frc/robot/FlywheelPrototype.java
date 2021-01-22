@@ -1,7 +1,7 @@
 /*
 THINGS TO KNOW
 4 inch flywheel
-??? desired RPM
+3700 - 4100 desired RPM (subject to change)
 2 to 1 gear ratio
 2 motors (neo) (built in encoder)
 1 motor needs to turn in reverse(?)
@@ -18,7 +18,7 @@ public class FlywheelPrototype{
     //the encoders are marked with e
     public static CANSparkMax m_flyOne, m_flyTwo;
     public static CANEncoder e_flyOne, e_flyTwo;
-    public static double kP, kI, kD, kFF, maxOut, minOut, maxRPM, destination;
+    public static double kP, kI, kD, kFF, maxRPM, destination;
     public static boolean firstRun;
 
     public static void Shooter(){
@@ -36,19 +36,17 @@ public class FlywheelPrototype{
         kI = 0.000000000001; //will find better value during testing
         kD = 0; //not needed
         kFF = 0; //not needed
-        maxOut = 1; //max value a .set(speed) command will take is 1
-        minOut = -1; //min value a .set(speed) command will take is -1
-        destination = 10000; //desired RPM of the flywheels
+        destination = 4100; //desired RPM of the flywheels
 
         setFlySpeed(destination); //setting the flywheels' speed
     }
 public static void setFlySpeed(double desRPM){
     //setting the first flywheel's speed
-    m_flyOne.set(flyWheelPID(kP, kI, kD, kFF, maxOut, minOut, desRPM, e_flyOne.getVelocity()));
-    //setting the second flywheel's speed (this one is negative (apparently one of the motors needs to spin the other way?) may change later)
-    m_flyTwo.set(-1 * flyWheelPID(kP, kI, kD, kFF, maxOut, minOut, desRPM, e_flyTwo.getVelocity()));
+    m_flyOne.set(flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyOne.getVelocity()));
+    //setting the second flywheel's speed (this one is negative (one of the motors needs to spin the other way?) may change later)
+    m_flyTwo.set(-1 * flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyTwo.getVelocity()));
 }
-public static double flyWheelPID(double p, double i, double d, double f, double maxOut, double minOut, double desOut, double flyOut){
+public static double flyWheelPID(double p, double i, double d, double f, double desOut, double flyOut){
     //setting some more variables
     double actOut = flyOut;
     double error = desOut - actOut;
@@ -56,6 +54,8 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
     double maxError = 0;
     double lastAct = 0;
     double maxIVal = .1; 
+    double maxOut = 1; //max value a .set(speed) command will take is 1
+    double minOut = -1; //min value a .set(speed) command will take is -1
     if(i != 0){
         maxError = maxIVal / i;
     }
