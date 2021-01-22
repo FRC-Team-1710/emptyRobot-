@@ -1,9 +1,9 @@
 /*
 THINGS TO KNOW
 4 inch flywheel
-3750 - desired RPM (subject to change)
+3750 desired RPM (subject to change)
 2 to 1 gear ratio
-2 motors (neo) (built in encoder)
+2 motors (neo) 
 1 motor needs to turn in reverse(?)
 */
 package frc.robot;
@@ -30,7 +30,6 @@ public class FlywheelPrototype{
         e_flyTwo = m_flyTwo.getEncoder();
         m_flyOne.setIdleMode(IdleMode.kCoast);
         m_flyTwo.setIdleMode(IdleMode.kCoast);
-        //m_flyOne.set(0);
 
         //setting the variables
         kP = 0.0002; //will find better value during testing
@@ -58,7 +57,7 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
     double actOut = flyOut;
     double error = desOut - actOut;
     double errorSum = 0;
-    double maxError = 4100;
+    double maxError = 3750;
     double lastAct = 0;
     double maxIVal = .1; 
     double maxOut = 1; //max value a .set(speed) command will take is 1

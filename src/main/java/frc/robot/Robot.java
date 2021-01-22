@@ -28,9 +28,6 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static XboxController Controller;
- 
-  
-  
 
   /**
    * This function is run when the robot is first started up and should be
@@ -42,13 +39,8 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    //encoder.initEncoder();
-    //MotorOut.motorInit();
-
-    FlywheelPrototype.Shooter();
+    FlywheelPrototype.FlywheelInit();;
     Controller = new XboxController(0);
-    
-    
   }
 
   /**
@@ -112,7 +104,7 @@ public class Robot extends TimedRobot {
     boolean aButton = Controller.getAButtonPressed();
   
     if(aButton){
-      FlywheelPrototype.setFlySpeed(4100);
+      FlywheelPrototype.setFlySpeed(3750);
     }
 
   }
