@@ -9,9 +9,10 @@ THINGS TO KNOW
 package frc.robot;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FlywheelPrototype{
     //the motors are marked with m
@@ -42,9 +43,17 @@ public class FlywheelPrototype{
     }
 public static void setFlySpeed(double desRPM){
     //setting the first flywheel's speed
-    m_flyOne.set(flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyOne.getVelocity()));
+    double flyOneSpeed = flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyOne.getVelocity());
+    m_flyOne.set(flyOneSpeed);
     //setting the second flywheel's speed (this one is negative (one of the motors needs to spin the other way?) may change later)
-    m_flyTwo.set(-1 * flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyTwo.getVelocity()));
+    double flyTwoSpeed = -1 * flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyTwo.getVelocity());
+    m_flyTwo.set(flyTwoSpeed);
+
+    SmartDashboard.putNumber("flyone-pid-out", flyOneSpeed);
+    SmartDashboard.putNumber("flytwo-pid-out", flyTwoSpeed);
+    SmartDashboard.putNumber("destination", destination);
+    SmartDashboard.putNumber("flyone-actual", e_flyOne.getVelocity());
+    SmartDashboard.putNumber("flytwo-actual", e_flyTwo.getVelocity());
 }
 public static double flyWheelPID(double p, double i, double d, double f, double desOut, double flyOut){
     //setting some more variables
