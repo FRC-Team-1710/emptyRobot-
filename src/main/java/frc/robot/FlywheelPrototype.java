@@ -4,15 +4,17 @@ THINGS TO KNOW
 3750 desired RPM (subject to change)
 2 to 1 gear ratio
 2 motors (neo) 
-1 motor needs to turn in reverse(?)
+1 motor needs to turn in reverse
 */
 package frc.robot;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 public class FlywheelPrototype{
     //the motors are marked with m
@@ -21,36 +23,49 @@ public class FlywheelPrototype{
     public static CANEncoder e_flyOne, e_flyTwo;
     public static double kP, kI, kD, kFF, maxRPM, destination;
     public static boolean firstRun;
+    public static XboxController Controller;
+    public static PowerDistributionPanel PDP;
 
     public static void FlywheelInit(){
         //Update first parameter to CAN IDs of the flywheels' motor controller
-        m_flyOne = new CANSparkMax(0, MotorType.kBrushless);
-        m_flyTwo = new CANSparkMax(0, MotorType.kBrushless);
+        m_flyOne = new CANSparkMax(1, MotorType.kBrushless);
+        m_flyTwo = new CANSparkMax(2, MotorType.kBrushless);
         e_flyOne = m_flyOne.getEncoder();
         e_flyTwo = m_flyTwo.getEncoder();
         m_flyOne.setIdleMode(IdleMode.kCoast);
         m_flyTwo.setIdleMode(IdleMode.kCoast);
-
+        Controller = new XboxController(0);
+        PDP = new PowerDistributionPanel(0);
+       
         //setting the variables
-        kP = 0.0002; //will find better value during testing
-        kI = 0.000000000001; //will find better value during testing
+        kP = 0.0001; //will find better value during testing
+        kI = 0.00000000001; //will find better value during testing
         kD = 0; //not needed
         kFF = 0; //not needed
     }
 public static void setFlySpeed(double desRPM){
+    double PDPAmps15 = PDP.getCurrent(15);
+    double PDPAmps14 = PDP.getCurrent(14);
+    double flyOneOut = e_flyOne.getVelocity();
+    double flyTwoOut = e_flyTwo.getVelocity();
     //setting the first flywheel's speed
-    double flyOneSpeed = flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyOne.getVelocity());
+    //double flyOneSpeed = 0;
+    double flyOneSpeed = Controller.getTriggerAxis(Hand.kRight);
     m_flyOne.set(flyOneSpeed);
-    //setting the second flywheel's speed (this one is negative (one of the motors needs to spin the other way?) may change later)
-    double flyTwoSpeed = -1 * flyWheelPID(kP, kI, kD, kFF, desRPM, e_flyTwo.getVelocity());
+    //setting the second flywheel's speed (this one is negative (one of the motors needs to spin the other way) may change later)
+    double flyTwoSpeed = -1 * Controller.getTriggerAxis(Hand.kRight);
     m_flyTwo.set(flyTwoSpeed);
 
     //displays the current output of the PID loop aswell as the destination and current RPM
-    SmartDashboard.putNumber("flyone-pid-out", flyOneSpeed);
-    SmartDashboard.putNumber("flytwo-pid-out", flyTwoSpeed);
-    SmartDashboard.putNumber("destination", destination);
-    SmartDashboard.putNumber("flyone-actual", e_flyOne.getVelocity());
-    SmartDashboard.putNumber("flytwo-actual", e_flyTwo.getVelocity());
+    
+    //SmartDashboard.putNumber("flyone-pid-out", flyOneSpeed);
+    //SmartDashboard.putNumber("flytwo-pid-out", flyTwoSpeed);
+    //SmartDashboard.putNumber("destination", destination);
+    SmartDashboard.putNumber("flyone-actual", Math.abs(flyOneOut));
+    SmartDashboard.putNumber("flytwo-actual", Math.abs(flyTwoOut));
+    SmartDashboard.putNumber("PDP-15-Out", PDPAmps15);
+    SmartDashboard.putNumber("PDP-14-Out", PDPAmps14);
+    SmartDashboard.putNumber("Trigger-Axis", Controller.getTriggerAxis(Hand.kRight));
 }
 public static double flyWheelPID(double p, double i, double d, double f, double desOut, double flyOut){
     //setting some more variables
@@ -84,7 +99,7 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
         errorSum = error;
     }
     else if(maxIVal != 0){
-		errorSum = constrain(errorSum +error, -maxError, maxError);
+		errorSum = constrain(errorSum + error, -maxError, maxError);
     }    
     else{
         errorSum += error;

@@ -35,9 +35,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    //m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    //m_chooser.addOption("My Auto", kCustomAuto);
+    //SmartDashboard.putData("Auto choices", m_chooser);
 
     FlywheelPrototype.FlywheelInit();;
     Controller = new XboxController(0);
@@ -101,11 +101,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    boolean aButton = Controller.getAButtonPressed();
+   // boolean aButton = Controller.getAButtonPressed();
   
-    if(aButton){
-      FlywheelPrototype.setFlySpeed(3750);
-    }
+      
+      FlywheelPrototype.setFlySpeed(3000);
+    
 
   }
   /**
