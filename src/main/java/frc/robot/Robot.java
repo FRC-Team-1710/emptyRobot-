@@ -7,19 +7,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-
-
-
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,10 +25,8 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
-  public static CANSparkMax HuddysSpark;
-  public static XboxController Controller;
-
+  public static XboxController intakeController, shooterController;
+  
 
   /**
    * This function is run when the robot is first started up and should be
@@ -48,12 +38,13 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    HuddysSpark = new CANSparkMax(5, MotorType.kBrushless);
+    Intake.intakeInit();
+    Intake.moveIntake(true);
+    Shooter.shooterInit();
+    intakeController = new XboxController(1);
+    shooterController = new XboxController(2);
+    
 
-    Controller = new XboxController(1);
-
-
-    HuddysSpark.setIdleMode(IdleMode.kBrake);
     
 
   }
@@ -111,9 +102,21 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    HuddysSpark.set(Controller.getRawAxis(5));
-  
-  }
+    if (intakeController.getTriggerAxis(Hand.kLeft) > 0) {
+      Intake.intake3.set(intakeController.getTriggerAxis(Hand.kLeft));
+    }
+
+    if (intakeController.getTriggerAxis(Hand.kRight) > 0) {
+      Intake.intake1.set(intakeController.getTriggerAxis(Hand.kRight));
+    }
+
+    if(shooterController.getTriggerAxis(Hand.kLeft) > 0) {
+      Shooter.shooter1.set(shooterController.getTriggerAxis(Hand.kLeft));
+    }
+
+
+    }
+
 
   /**
    * This function is called periodically during test mode.
