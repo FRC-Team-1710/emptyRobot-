@@ -15,8 +15,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 // import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 public class Shooter{
-    //the motors are marked with m
-    //the encoders are marked with e
     public static CANSparkMax shooter1, shooter2;
     public static CANEncoder encoder1, encoder2;
     public static MiniPID flywheelPID;
