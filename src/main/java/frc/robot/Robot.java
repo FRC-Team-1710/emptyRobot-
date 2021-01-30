@@ -123,6 +123,9 @@ public class Robot extends TimedRobot {
     if(shooterController.getTriggerAxis(Hand.kLeft) > 0) {
       Shooter.shooter1.set(shooterController.getTriggerAxis(Hand.kLeft));
     }
+    
+    
+  }
 
 
 
