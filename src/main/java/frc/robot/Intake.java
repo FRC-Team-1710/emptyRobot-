@@ -23,7 +23,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public class Intake {
     public static CANSparkMax intake1, intake2, intake3;
-    public boolean follow = true;
+    public boolean up = true;
+    public boolean down = true;
 
     // creates motors
     public static void intakeInit(){
@@ -35,17 +36,23 @@ public class Intake {
         intake3.setIdleMode(IdleMode.kBrake);
     }
 
-   // intake motors 1 & 2 are set in opposite directions
-    public static void moveIntake(boolean follow){
-        if (follow == true) {
+    // intake motors 1 & 2 are set in opposite directions
+    public static void moveIntakeUp(boolean up) {
+        if (up == true) {
             intake1.set(1);
             intake2.set(-1);
-             
-           
         }
-        
     }
 
+    public static void moveIntakeDown (boolean down) {
+        if (down == true) {
+            intake1.set(-1);
+            intake2.set(1);
+        }
+
+    }
+        
+    
 
 	
     
