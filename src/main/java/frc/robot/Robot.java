@@ -42,8 +42,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     Intake.intakeInit();
-    Intake.moveIntakeUp(true);
-    Intake.moveIntakeDown(true);
+    //Intake.moveIntakeUp(true);
+    //Intake.moveIntakeDown(true);
     Shooter.shooterInit();
     intakeController = new XboxController(0);
     shooterController = new XboxController(1);
@@ -106,14 +106,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
   
-    if (intakeController.getTriggerAxis(Hand.kLeft) > 0) { 
-      Intake.intake3.set(intakeController.getTriggerAxis(Hand.kLeft));
+    if (intakeController.getBumperPressed(Hand.kLeft)) { 
+      Intake.intake3.set(1.0);
     } else
       Intake.intake3.set(0);
     
+    // moves intake up
     if (intakeController.getTriggerAxis(Hand.kRight) > 0) {
       Intake.intake1.set(intakeController.getTriggerAxis(Hand.kRight));
-      Intake.intake2.set(intakeController.getTriggerAxis(Hand.kRight));
     } else 
       Intake.intake1.set(0);
 
@@ -121,6 +121,19 @@ public class Robot extends TimedRobot {
       Intake.intake2.set(-intakeController.getTriggerAxis(Hand.kRight));
     } else 
       Intake.intake2.set(0);
+
+    // moves intake down
+      if (intakeController.getTriggerAxis(Hand.kLeft) > 0) {
+        Intake.intake1.set(-intakeController.getTriggerAxis(Hand.kLeft));
+      } else 
+        Intake.intake1.set(0);
+  
+      if (intakeController.getTriggerAxis(Hand.kRight) > 0) {
+        Intake.intake2.set(intakeController.getTriggerAxis(Hand.kLeft));
+      } else 
+        Intake.intake2.set(0);
+
+
 
     // shooter controller
     if(shooterController.getTriggerAxis(Hand.kLeft) > 0) {
