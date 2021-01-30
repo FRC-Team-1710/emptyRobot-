@@ -104,11 +104,13 @@ public class Robot extends TimedRobot {
 
     if (intakeController.getTriggerAxis(Hand.kLeft) > 0) {
       Intake.intake3.set(intakeController.getTriggerAxis(Hand.kLeft));
-    }
+    } else
+      Intake.intake3.set(0);
 
     if (intakeController.getTriggerAxis(Hand.kRight) > 0) {
       Intake.intake1.set(intakeController.getTriggerAxis(Hand.kRight));
-    }
+    } else
+      Intake.intake1.set(0);
 
     if(shooterController.getTriggerAxis(Hand.kLeft) > 0) {
       Shooter.shooter1.set(shooterController.getTriggerAxis(Hand.kLeft));
