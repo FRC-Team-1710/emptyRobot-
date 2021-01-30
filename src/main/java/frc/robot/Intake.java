@@ -35,15 +35,17 @@ public class Intake {
         intake3.setIdleMode(IdleMode.kBrake);
     }
 
-    // intake2 motor follows intake1
+   // intake motors 1 & 2 are set in opposite directions
     public static void moveIntake(boolean follow){
         if (follow == true) {
-        intake2.setIdleMode(intake1.getIdleMode());
+            intake1.set(1);
+            intake2.set(-1);
              
            
         }
         
     }
+
 
 	
     
