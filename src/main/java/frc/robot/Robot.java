@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 
 
@@ -28,6 +29,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static XboxController Controller;
+  double RPM = 3000;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -101,11 +103,24 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-   // boolean aButton = Controller.getAButtonPressed();
+  double maxRPM = 5000;
   
-      
-    FlywheelPrototype.setFlySpeed(3000);
-    
+  if (Controller.getAButtonPressed()){
+    RPM += 100;
+  }
+  if (Controller.getBButtonPressed()){
+    RPM -= 100;
+  }
+
+   if (Controller.getTriggerAxis(Hand.kRight) > .5){
+     
+     if (RPM > maxRPM){
+      RPM = maxRPM;
+     }
+     else{
+      FlywheelPrototype.setFlySpeed(RPM);
+     }
+   }
 
   }
   /**

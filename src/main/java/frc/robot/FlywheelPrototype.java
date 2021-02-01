@@ -34,6 +34,8 @@ public class FlywheelPrototype{
         e_flyTwo = m_flyTwo.getEncoder();
         m_flyOne.setIdleMode(IdleMode.kCoast);
         m_flyTwo.setIdleMode(IdleMode.kCoast);
+        m_flyOne.setSmartCurrentLimit(30);
+        m_flyTwo.setSmartCurrentLimit(30);
         Controller = new XboxController(0);
         PDP = new PowerDistributionPanel(0);
        
@@ -76,7 +78,7 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
     double errorSum = 0;
     double maxError = 3750;
     double lastAct = 0;
-    double maxIVal = .1; 
+    double maxIVal = .5; 
     double maxOut = 1; //max value a .set(speed) command will take is 1
     double minOut = -1; //min value a .set(speed) command will take is -1
     if(i != 0){
