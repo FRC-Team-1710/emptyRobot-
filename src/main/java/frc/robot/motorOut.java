@@ -28,12 +28,11 @@ public class motorOut {
         Spark.setIdleMode(IdleMode.kBrake);
 
         Encoder = Spark.getEncoder();
-        Encoder.setPositionConversionFactor(20);
         setPosition(0);
     }
 
     public static void setPosition(double pos){
-        destination = pos;
+        destination = pos * 0.05;
         SmartDashboard.putNumber("Position", getPosition());
         SmartDashboard.putNumber("Destination", destination);
     }

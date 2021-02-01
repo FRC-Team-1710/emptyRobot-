@@ -138,8 +138,8 @@ public class Robot extends TimedRobot {
 
     //Set motor position via PID
     double speed = (motorOut.destination-motorOut.getPosition());
-    /*if(Math.abs(Math.abs(motorOut.destination)-Math.abs(motorOut.getPosition()))>180)
-      speed *= -1;*/
+    if(Math.abs(Math.abs(motorOut.destination)-Math.abs(motorOut.getPosition()))>180)
+      speed *= -1;
     motorOut.Spark.set(speed);
   }
 
@@ -148,5 +148,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+
+  public void setDestination(double current, double direction){
+    
   }
 }
