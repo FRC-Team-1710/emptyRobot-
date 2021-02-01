@@ -48,24 +48,26 @@ public static void setFlySpeed(double desRPM){
     double PDPAmps14 = PDP.getCurrent(14);
     double flyOneOut = e_flyOne.getVelocity();
     double flyTwoOut = e_flyTwo.getVelocity();
+
     //setting the first flywheel's speed
-    //double flyOneSpeed = 0;
+    //double flyOneSpeed = flyWheelPID(kP, kI, kD, kFF, desRPM, flyOneOut);
     double flyOneSpeed = Controller.getTriggerAxis(Hand.kRight);
     m_flyOne.set(flyOneSpeed);
-    //setting the second flywheel's speed (this one is negative (one of the motors needs to spin the other way) may change later)
+
+    //setting the second flywheel's speed (this one is negative (one of the motors needs to spin the other way))
+    //double flyTwoSpeed = -1 * (flyWheelPID(kP, kI, kD, kFF, desRPM, flyTwoOut));
     double flyTwoSpeed = -1 * Controller.getTriggerAxis(Hand.kRight);
     m_flyTwo.set(flyTwoSpeed);
 
     //displays the current output of the PID loop aswell as the destination and current RPM
-    
-    //SmartDashboard.putNumber("flyone-pid-out", flyOneSpeed);
-    //SmartDashboard.putNumber("flytwo-pid-out", flyTwoSpeed);
-    //SmartDashboard.putNumber("destination", destination);
+    SmartDashboard.putNumber("flyone-pid-out", flyOneSpeed);
+    SmartDashboard.putNumber("flytwo-pid-out", flyTwoSpeed);
+    SmartDashboard.putNumber("destination", desRPM);
     SmartDashboard.putNumber("flyone-actual", Math.abs(flyOneOut));
     SmartDashboard.putNumber("flytwo-actual", Math.abs(flyTwoOut));
     SmartDashboard.putNumber("PDP-15-Out", PDPAmps15);
     SmartDashboard.putNumber("PDP-14-Out", PDPAmps14);
-    SmartDashboard.putNumber("Trigger-Axis", Controller.getTriggerAxis(Hand.kRight));
+    //SmartDashboard.putNumber("Trigger-Axis", Controller.getTriggerAxis(Hand.kRight));
 }
 public static double flyWheelPID(double p, double i, double d, double f, double desOut, double flyOut){
     //setting some more variables
