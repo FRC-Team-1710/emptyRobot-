@@ -34,9 +34,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  private double multiplier = 1;
-
-  public static CANSparkMax Spark;
+    public Wheel Wheelie;
   public static XboxController Controller;
   /**
    * This function is run when the robot is first started up and should be
@@ -48,12 +46,8 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    encoder.initEncoder();
-    motorOut.motorInit();
-    Spark = new CANSparkMax(5, MotorType.kBrushless);
+    Wheelie = new Wheel(2,3);
     Controller = new XboxController(0);
-
-    Spark.setIdleMode(IdleMode.kBrake);
   }
 
   /**
@@ -107,40 +101,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
-    //Reset recorded position if necessary
-    
-    //Calculate direction
-    double direction = 0;
-    switch(motorOut.getQuadrant(Controller.getRawAxis(0), Controller.getRawAxis(1))){
-      case 1:
-      direction = ((Math.tanh((Math.abs(Controller.getRawAxis(0))/Math.abs(Controller.getRawAxis(1)))))+270);
-      motorOut.setPosition(direction);
-      SmartDashboard.putNumber("Directional Input", direction);
-      break;
-      case 2:
-      direction = ((Math.tanh((Math.abs(Controller.getRawAxis(1))/Math.abs(Controller.getRawAxis(0))))));
-      motorOut.setPosition(direction);
-      SmartDashboard.putNumber("Directional Input", direction);
-      break;
-      case 3:
-      direction = ((Math.tanh((Math.abs(Controller.getRawAxis(0))/Math.abs(Controller.getRawAxis(1)))))+90);
-      motorOut.setPosition(direction);
-      SmartDashboard.putNumber("Directional Input", direction);
-      break;
-      case 4:
-      direction = ((Math.tanh((Math.abs(Controller.getRawAxis(1))/Math.abs(Controller.getRawAxis(0)))))+180);
-      motorOut.setPosition(direction);
-      SmartDashboard.putNumber("Directional Input", direction);
-      break;
-    }
-    encoder.getEncoderVal();
-
-    //Set motor position via PID
-    double speed = (motorOut.destination-motorOut.getPosition());
-    if(Math.abs(Math.abs(motorOut.destination)-Math.abs(motorOut.getPosition()))>180)
-      speed *= -1;
-    motorOut.Spark.set(speed);
+    double angle = getAngle(Controller.getRawAxis(0), Controller.getRawAxis(1));
+    record();
+    Wheelie.rotateTo(angle);
   }
 
   /**
@@ -150,7 +113,45 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  public void setDestination(double current, double direction){
-    
+  /**
+   * Shortcut to get angle from a point
+   */
+  public static double getAngle(double x, double y){
+    double a=x, b=x, c=0;
+    switch(getQuadrant(x, y)){
+      case 0:a=0;c=  0;break;
+      case 1:b=y;c=270;break;
+      case 2:a=y;c=  0;break;
+      case 3:b=y;c= 90;break;
+      case 4:a=y;c=180;break;
+    }
+    double angle = Math.tanh((Math.abs(a)/Math.abs(b)))*90+c;
+    SmartDashboard.putNumber("Destination",angle);
+    return angle;
+  }
+
+  /**
+   * A shortcut for finding the quadrant of a point
+   */
+  public static int getQuadrant(double x, double y){
+    int quadrant = 0;
+    if(x>=0&&y<0){
+      quadrant=1;
+    }else if(x>0&&y>=0){
+      quadrant=2;
+    }else if(x<=0&&y>0){
+      quadrant=3;
+    }else if(x<0&&y<=0){
+      quadrant=4;
+    }else if(x==0&&y==0){
+      quadrant=0;
+    }
+    return quadrant;
+  }
+
+  public static void record(){
+    SmartDashboard.putNumber("Left JoyStick Input X", Controller.getRawAxis(0));
+    SmartDashboard.putNumber("Left JoyStick Input Y", Controller.getRawAxis(1));
+
   }
 }
