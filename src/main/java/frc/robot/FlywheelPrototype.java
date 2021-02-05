@@ -34,16 +34,16 @@ public class FlywheelPrototype{
         e_flyTwo = m_flyTwo.getEncoder();
         m_flyOne.setIdleMode(IdleMode.kCoast);
         m_flyTwo.setIdleMode(IdleMode.kCoast);
-        m_flyOne.setSmartCurrentLimit(30);
-        m_flyTwo.setSmartCurrentLimit(30);
+        m_flyOne.setSmartCurrentLimit(40);
+        m_flyTwo.setSmartCurrentLimit(40);
         Controller = new XboxController(0);
         PDP = new PowerDistributionPanel(0);
        
         //setting the variables
-        kP = 0.0001; //will find better value during testing
-        kI = 0.00000000001; //will find better value during testing
+        kP = 0.00025; //will find better value during testing
+        kI = 0; //will find better value during testing
         kD = 0; //not needed
-        kFF = 0; //not needed
+        kFF = 0; //not needed 
     }
 public static void setFlySpeed(double desRPM){
     double PDPAmps15 = PDP.getCurrent(15);
@@ -52,18 +52,18 @@ public static void setFlySpeed(double desRPM){
     double flyTwoOut = e_flyTwo.getVelocity();
 
     //setting the first flywheel's speed
-    //double flyOneSpeed = flyWheelPID(kP, kI, kD, kFF, desRPM, flyOneOut);
-    double flyOneSpeed = Controller.getTriggerAxis(Hand.kRight);
+    double flyOneSpeed = flyWheelPID(kP, kI, kD, kFF, desRPM, flyOneOut);
+    //double flyOneSpeed = Controller.getTriggerAxis(Hand.kRight);
     m_flyOne.set(flyOneSpeed);
 
     //setting the second flywheel's speed (this one is negative (one of the motors needs to spin the other way))
-    //double flyTwoSpeed = -1 * (flyWheelPID(kP, kI, kD, kFF, desRPM, flyTwoOut));
-    double flyTwoSpeed = -1 * Controller.getTriggerAxis(Hand.kRight);
-    m_flyTwo.set(flyTwoSpeed);
+    //double flyTwoSpeed = (flyWheelPID(kP, kI, kD, kFF, desRPM, flyTwoOut));
+    //double flyTwoSpeed = -1 * Controller.getTriggerAxis(Hand.kRight);
+    m_flyTwo.set(-flyOneSpeed);
 
     //displays the current output of the PID loop aswell as the destination and current RPM
     SmartDashboard.putNumber("flyone-pid-out", flyOneSpeed);
-    SmartDashboard.putNumber("flytwo-pid-out", flyTwoSpeed);
+    //SmartDashboard.putNumber("flytwo-pid-out", flyTwoSpeed);
     SmartDashboard.putNumber("destination", desRPM);
     SmartDashboard.putNumber("flyone-actual", Math.abs(flyOneOut));
     SmartDashboard.putNumber("flytwo-actual", Math.abs(flyTwoOut));
@@ -76,7 +76,7 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
     double actOut = flyOut;
     double error = desOut - actOut;
     double errorSum = 0;
-    double maxError = 3750;
+    double maxError = 5500;
     double lastAct = 0;
     double maxIVal = .5; 
     double maxOut = 1; //max value a .set(speed) command will take is 1
@@ -84,12 +84,15 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
     if(i != 0){
         maxError = maxIVal / i;
     }
+
     double pVal = p * error; //setting P Value
+
     double ffVal = f * destination; //setting FF Value
     if(firstRun){ //the first run won't have a last output so we set it
         lastAct = actOut;
         firstRun = false;
     }
+
     double dVal = -d * (actOut - lastAct); //setting D Value
     lastAct = actOut; 
 
@@ -97,6 +100,7 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
     if(maxIVal != 0){ //making sure the I Value is within the limits
         iVal = constrain(iVal ,-maxIVal ,maxIVal); 
     }
+
     double PIDOutput = pVal + iVal + dVal + ffVal; //adding everthing up to get the output
     
     if(minOut != maxOut && !bounded(actOut, minOut, maxOut) ){
