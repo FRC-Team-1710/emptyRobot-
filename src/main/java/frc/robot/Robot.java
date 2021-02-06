@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-    public Wheel Wheelie;
+  public Wheel Wheelie;
   public static XboxController Controller;
   /**
    * This function is run when the robot is first started up and should be
@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    Wheelie = new Wheel(2,3);
+    Wheelie = new Wheel(2,3,1);
     Controller = new XboxController(0);
   }
 
@@ -102,8 +102,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double angle = getAngle(Controller.getRawAxis(0), Controller.getRawAxis(1));
+		SmartDashboard.putBoolean("angle.isNaN", Double.isNaN(angle));
     record();
-    Wheelie.rotateTo(angle);
+    if(angle!=0)
+      Wheelie.rotateTo(angle);
+    else
+      Wheelie.stopSpinning();
   }
 
   /**
@@ -118,14 +122,15 @@ public class Robot extends TimedRobot {
    */
   public static double getAngle(double x, double y){
     double a=x, b=x, c=0;
+    SmartDashboard.putNumber("Input Quadrant", getQuadrant(x,y));
     switch(getQuadrant(x, y)){
-      case 0:a=0;c=  0;break;
+      case 0:return 0;
       case 1:b=y;c=270;break;
       case 2:a=y;c=  0;break;
       case 3:b=y;c= 90;break;
       case 4:a=y;c=180;break;
     }
-    double angle = Math.tanh((Math.abs(a)/Math.abs(b)))*90+c;
+    double angle = Math.tanh(-(Math.abs(a)/Math.abs(b)))*90-c;
     SmartDashboard.putNumber("Destination",angle);
     return angle;
   }

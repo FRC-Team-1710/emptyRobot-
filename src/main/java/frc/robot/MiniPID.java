@@ -22,7 +22,7 @@ public class MiniPID{
 	private double D=0;
 	private double F=0;
 
-	private double maxIOutput=0;
+	private double maxIOutput=1;
 	private double maxError=0;
 	private double errorSum=0;
 
@@ -101,11 +101,15 @@ public class MiniPID{
 	 * @param i New gain value for the Integral term
 	 */
 	public void setI(double i){
-		if(I!=0){
+		if(I!=0&&i!=0){
 			errorSum=errorSum*I/i;
-			}
-		if(maxIOutput!=0){
+		}else{
+			errorSum=0;
+		}
+		if(maxIOutput!=0&&i!=0){
 			maxError=maxIOutput/i;
+		}else{
+			maxError=0;
 		}
 		I=i;
 		checkSigns();
@@ -258,9 +262,8 @@ public class MiniPID{
 		double Ioutput;
 		double Doutput;
 		double Foutput;
-
+		
 		this.setpoint=setpoint;
-		SmartDashboard.putNumber("setpoint", setpoint);
 		// Ramp the setpoint used for calculations if user has opted to do so
 		if(setpointRange!=0){
 			setpoint=constrain(setpoint,actual-setpointRange,actual+setpointRange);
@@ -283,7 +286,6 @@ public class MiniPID{
 			lastOutput=Poutput+Foutput;
 			firstRun=false;
 		}
-
 		// Calculate D Term
 		// Note, this is negative. This actually "slows" the system if it's doing
 		// the correct thing, and small values helps prevent output spikes and overshoot 
@@ -294,15 +296,16 @@ public class MiniPID{
 		// 1. maxIoutput restricts the amount of output contributed by the Iterm.
 		// 2. prevent windup by not increasing errorSum if we're already running against our max Ioutput
 		// 3. prevent windup by not increasing errorSum if output is output=maxOutput    
+		SmartDashboard.putBoolean("I.isNaN", Double.isNaN(I));
+		SmartDashboard.putBoolean("errorSum.isNaN", Double.isNaN(error));
 		Ioutput=I*errorSum;
-		SmartDashboard.putNumber("errorSum", errorSum);
 
 		if(maxIOutput!=0){
 			Ioutput=constrain(Ioutput,-maxIOutput,maxIOutput); 
 		}    
 
 		// And, finally, we can just add the terms up
-		output=Foutput + Poutput + Ioutput + Doutput;
+		output=Poutput + Ioutput + Foutput + Doutput;
 
 		// Figure out what we're doing with the error.
 		if(minOutput!=maxOutput && !bounded(output, minOutput,maxOutput) ){
@@ -323,16 +326,24 @@ public class MiniPID{
 		else{
 			errorSum+=error;
 		}
-
+		if(lastOutput == 0){
+			lastOutput=1;
+		}
 		// Restrict output to our specified output and ramp limits
 		if(outputRampRate!=0){
 			output=constrain(output, lastOutput-outputRampRate,lastOutput+outputRampRate);
+			//SmartDashboard.putNumber("outpch2", output);
+
 		}
 		if(minOutput!=maxOutput){ 
 			output=constrain(output, minOutput,maxOutput);
-			}
+			//SmartDashboard.putNumber("outpch3", output);
+
+		}
 		if(outputFilter!=0){
 			output=lastOutput*outputFilter+output*(1-outputFilter);
+			//SmartDashboard.putNumber("outpch4", output);
+
 		}
 
 		// Get a test printline with lots of details about the internal 
