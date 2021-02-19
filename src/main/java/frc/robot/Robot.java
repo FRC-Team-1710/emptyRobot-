@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+//import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -54,15 +54,12 @@ public class Robot extends TimedRobot {
     //m_chooser.addOption("My Auto", kCustomAuto);
     //SmartDashboard.putData("Auto choices", m_chooser);
 // initialize motor
-m_One = new CANSparkMax(0, MotorType.kBrushless);
-m_Two = new CANSparkMax(0, MotorType.kBrushless);
 
-m_Two.follow(m_One);
-/** 
- * The RestoreFactoryDefaults method can be used to reset the configuration parameters
- * in the SPARK MAX to their factory default state. If no argument is passed, these
- * parameters will not persist between power cycles
- */
+/*
+
+m_One = new CANSparkMax(3, MotorType.kBrushless);
+m_Two = new CANSparkMax(4, MotorType.kBrushless);
+
 m_One.restoreFactoryDefaults();
 m_Two.restoreFactoryDefaults();
 
@@ -71,8 +68,8 @@ m_pidController = m_One.getPIDController();
 m_encoder = m_One.getEncoder();
 
 // PID coefficients
-kP = 5e-5; 
-kI = 1e-6;
+kP = .00005; 
+kI = .000001;
 kD = 0; 
 kIz = 0; 
 kFF = 0.000156; 
@@ -81,7 +78,7 @@ kMinOutput = -1;
 maxRPM = 5700;
 
 // Smart Motion Coefficients
-maxVel = 3000; // rpm
+maxVel = 2000; //rpm
 maxAcc = 1500;
 
 // set PID coefficients
@@ -92,18 +89,7 @@ m_pidController.setIZone(kIz);
 m_pidController.setFF(kFF);
 m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
-/**
- * Smart Motion coefficients are set on a CANPIDController object
- * 
- * - setSmartMotionMaxVelocity() will limit the velocity in RPM of
- * the pid controller in Smart Motion mode
- * - setSmartMotionMinOutputVelocity() will put a lower bound in
- * RPM of the pid controller in Smart Motion mode
- * - setSmartMotionMaxAccel() will limit the acceleration in RPM^2
- * of the pid controller in Smart Motion mode
- * - setSmartMotionAllowedClosedLoopError() will set the max allowed
- * error for the pid controller in Smart Motion mode
- */
+
 
 int smartMotionSlot = 0;
 m_pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
@@ -131,12 +117,12 @@ SmartDashboard.putNumber("Set Velocity", 0);
 // button to toggle between velocity and smart motion modes
 SmartDashboard.putBoolean("Mode", true);
 
+*/
 
+FlywheelPrototype.FlywheelInit();;
 
-    FlywheelPrototype.FlywheelInit();;
-    
-    Controller = new XboxController(0);
-  }
+Controller = new XboxController(0);
+}
 
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -197,7 +183,7 @@ SmartDashboard.putBoolean("Mode", true);
   @Override
   public void teleopPeriodic() {
 
-
+/*
 
 // read PID coefficients from SmartDashboard
 double p = SmartDashboard.getNumber("P Gain", 0);
@@ -244,10 +230,11 @@ SmartDashboard.putNumber("SetPoint", setPoint);
 SmartDashboard.putNumber("Process Variable", processVariable);
 SmartDashboard.putNumber("Output", m_One.getAppliedOutput());
 
+m_Two.set(-m_One.getAppliedOutput());
 
-     
+*/
 
-  //FlywheelPrototype.setFlySpeed(3000);
+  FlywheelPrototype.setFlySpeed(5000);
 
 
   }

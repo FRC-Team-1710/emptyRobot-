@@ -12,7 +12,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+//import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
@@ -25,6 +25,7 @@ public class FlywheelPrototype{
     public static boolean firstRun;
     public static XboxController Controller;
     public static PowerDistributionPanel PDP;
+    
 
     public static void FlywheelInit(){
         //Update first parameter to CAN IDs of the flywheels' motor controller
@@ -40,8 +41,8 @@ public class FlywheelPrototype{
         PDP = new PowerDistributionPanel(0);
        
         //setting the variables
-        kP = 0.00025; //will find better value during testing
-        kI = 0; //will find better value during testing
+        kP = 0.0004; //will find better value during testing
+        kI = 0.0000000001; //will find better value during testing
         kD = 0; //not needed
         kFF = 0; //not needed 
     }
@@ -52,7 +53,7 @@ public static void setFlySpeed(double desRPM){
     double flyTwoOut = e_flyTwo.getVelocity();
 
     //setting the first flywheel's speed
-    double flyOneSpeed = flyWheelPID(kP, kI, kD, kFF, desRPM, flyOneOut);
+    double flyOneSpeed = FlyPID.FlywheelPID(kP, kI, kD, kFF, desRPM, flyOneOut);
     //double flyOneSpeed = Controller.getTriggerAxis(Hand.kRight);
     m_flyOne.set(flyOneSpeed);
 
@@ -78,7 +79,7 @@ public static double flyWheelPID(double p, double i, double d, double f, double 
     double errorSum = 0;
     double maxError = 5500;
     double lastAct = 0;
-    double maxIVal = .5; 
+    double maxIVal = 1; 
     double maxOut = 1; //max value a .set(speed) command will take is 1
     double minOut = -1; //min value a .set(speed) command will take is -1
     if(i != 0){

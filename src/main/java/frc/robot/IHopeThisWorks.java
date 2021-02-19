@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -50,9 +51,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * load the shuffleboard.json file in the root of this directory to get the full
  * effect of the GUI layout.
  */
-public class NewPID extends TimedRobot {
+public class IHopeThisWorks extends TimedRobot {
   private CANSparkMax m_flyOne, m_flyTwo;
-  private CANPIDController m_pidController, m2_pidController;
+  private CANPIDController m_pidController;
   private CANEncoder m_encoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
 
@@ -68,6 +69,7 @@ public class NewPID extends TimedRobot {
      * parameters will not persist between power cycles
      */
     m_flyOne.restoreFactoryDefaults();
+    m_flyTwo.restoreFactoryDefaults();
 
     // initialze PID controller and encoder objects
     m_pidController = m_flyOne.getPIDController();
@@ -84,7 +86,7 @@ public class NewPID extends TimedRobot {
     maxRPM = 5700;
 
     // Smart Motion Coefficients
-    maxVel = 3000; // rpm
+    maxVel = 2000; // rpm
     maxAcc = 1500;
 
     // set PID coefficients
@@ -107,6 +109,7 @@ public class NewPID extends TimedRobot {
      * - setSmartMotionAllowedClosedLoopError() will set the max allowed
      * error for the pid controller in Smart Motion mode
      */
+
     int smartMotionSlot = 0;
     m_pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
     m_pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
@@ -159,6 +162,7 @@ public class NewPID extends TimedRobot {
       m_pidController.setOutputRange(min, max); 
       kMinOutput = min; kMaxOutput = max; 
     }
+
     if((maxV != maxVel)) { m_pidController.setSmartMotionMaxVelocity(maxV,0); maxVel = maxV; }
     if((minV != minVel)) { m_pidController.setSmartMotionMinOutputVelocity(minV,0); minVel = minV; }
     if((maxA != maxAcc)) { m_pidController.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
@@ -180,12 +184,9 @@ public class NewPID extends TimedRobot {
       m_pidController.setReference(setPoint, ControlType.kSmartMotion);
       processVariable = m_encoder.getPosition();
     }
-    
+
     SmartDashboard.putNumber("SetPoint", setPoint);
     SmartDashboard.putNumber("Process Variable", processVariable);
     SmartDashboard.putNumber("Output", m_flyOne.getAppliedOutput());
-
-    m_flyOne.set(m_flyOne.getAppliedOutput());
-    m_flyTwo.set(m_flyOne.getAppliedOutput());
   }
 }
