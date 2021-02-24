@@ -1,74 +1,88 @@
 package frc.robot;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANPIDController;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
-
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Wheel{
-    public static TalonFX sparky;
-    public static TalonFX spinny;
-    public static CANCoder encoder;
-    public static MiniPID pid;
-    public static CANPIDController PID;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
+public class Wheel {
+    public TalonFX sparky;
+    public TalonFX spinny;
+    public CANCoder encoder;
+    public MiniPID pid;
 
-    public Wheel(int angleMotor, int speedMotor, int encoderPort){
-        sparky = new TalonFX(speedMotor);
-        spinny = new TalonFX(angleMotor);
+    public double offset;
+    public double driveModifier = 1;
+
+    public Wheel(int driveMotor, int encoderPort, int steerMotor, double offset){
+        sparky = new TalonFX(driveMotor);
+        spinny = new TalonFX(steerMotor);
         encoder = new CANCoder(encoderPort);
-
-        pid = new MiniPID(0.1,0,0,0);
+        
+        pid = new MiniPID(0.005,0,0.0001,0);
+        
+        CANCoderConfiguration canCoderConfiguration = new CANCoderConfiguration();
+        canCoderConfiguration.magnetOffsetDegrees = offset;
+        encoder.configAllSettings(canCoderConfiguration);
     }
 
     /**
-     * Calculate raw destination from input
-     * and move towards that destination
+     * Set the speed of the steering motor using the PID controller
+     * @param degrees The target position in degrees
      */
-    public void rotateTo(double position){
-        position = getNearest(getPosition()*20, position);
+    public void rotateTo(double degrees){
+        double target = getNearest(getPosition(), degrees);
+        double speed = pid.getOutput(getPosition(), target);
 
-        double destination = position * 0.05;
-        double speed = pid.getOutput(getPosition(), destination);
-        //double speed = (destination-getPosition())*0.1;
-        SmartDashboard.putNumber("Raw Destination", destination);
-        SmartDashboard.putNumber("Speed", speed);
-        spinny.set(TalonFXControlMode.Velocity, speed);
+        SmartDashboard.putNumber("Target Orientation", target);
+        SmartDashboard.putNumber("Rotation Speed", speed);
+
+        spinny.set(TalonFXControlMode.PercentOutput, speed);
     }
-
-    public static double getPosition(){
-        SmartDashboard.putNumber("Position", encoder.getPosition());
-        return encoder.getPosition();
-    }
-
-    public void stopSpinning(){
-        spinny.set(TalonFXControlMode.Velocity, 0);
-    }
-
 
     /**
-     * A method to find the nearest number that represents
-     * the same physical orientation as the input angle
-     * @param actual The current position of the wheel
-     * @param setPoint The controller input, should be between -360 and 0
-     * @return The nearest angle that represents the same position as the input
+     * Update orientation on the SmartDashboard
+     * @return The position of the angular motor in degrees
      */
-    public static double getNearest(double actual, double setPoint){
-        int level = (int)actual/360;
-        int mod=-1;
-        if(level!=0){mod = level/Math.abs(level);}
-        setPoint += 360*level;
-        if(Math.abs((actual)-(setPoint))>180){setPoint+=360*mod;}
-        return setPoint;
+    public double getPosition(){
+        SmartDashboard.putNumber("Orientation", encoder.getAbsolutePosition());
+        return encoder.getAbsolutePosition();
+    }
+
+    public void spinBrake(){
+        spinny.set(TalonFXControlMode.PercentOutput, 0);
+    }
+
+    /**
+     * Method to calculate the most efficient way to move
+     * @param current The current orientation of the wheel
+     * @param target  The target orientation of the wheel
+     * @return The raw numerical target for the PID controller to shoot for
+     */
+    public double getNearest(double current, double target){
+        double difference = current - target;
+
+        int modifier = 1;
+        if(difference!=0)
+            modifier = (int)(difference/Math.abs(difference));
+
+        if(Math.abs(difference)>90){
+            target+=180*modifier;
+            driveModifier*=-1;
+        }
+        return target;
+    }
+
+    /**
+     * Set the wheel's drive speed
+     * @param speed The speed to drive at
+     */
+    public void drive(double speed){
+        //speed = speed * driveModifier;
+        SmartDashboard.putNumber("Drive Speed", speed);
+        sparky.set(TalonFXControlMode.PercentOutput, speed);
     }
 }

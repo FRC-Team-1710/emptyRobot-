@@ -296,8 +296,7 @@ public class MiniPID{
 		// 1. maxIoutput restricts the amount of output contributed by the Iterm.
 		// 2. prevent windup by not increasing errorSum if we're already running against our max Ioutput
 		// 3. prevent windup by not increasing errorSum if output is output=maxOutput    
-		SmartDashboard.putBoolean("I.isNaN", Double.isNaN(I));
-		SmartDashboard.putBoolean("errorSum.isNaN", Double.isNaN(error));
+
 		Ioutput=I*errorSum;
 
 		if(maxIOutput!=0){
