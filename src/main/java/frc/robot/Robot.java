@@ -8,18 +8,19 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-
-
-
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,8 +35,8 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  public static CANSparkMax HuddysSpark;
-  public static XboxController Controller;
+  public static CANSparkMax micahSparkMax;
+  public static XboxController controller;
 
 
   /**
@@ -48,13 +49,12 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    HuddysSpark = new CANSparkMax(5, MotorType.kBrushless);
 
-    Controller = new XboxController(1);
-
-
-    HuddysSpark.setIdleMode(IdleMode.kBrake);
+    micahSparkMax = new CANSparkMax(2, MotorType.kBrushless);
     
+    controller = new XboxController(0);
+
+    micahSparkMax.setIdleMode(IdleMode.kBrake);
 
   }
 
@@ -111,7 +111,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    HuddysSpark.set(Controller.getRawAxis(5));
+
+    double value = controller.getX(Hand.kRight);
+
+
+
+    micahSparkMax.set(0.0);
+
+    // I think the integer in .set(here) needs to be directly correlated to the left c-stick via variable.
   
   }
 
