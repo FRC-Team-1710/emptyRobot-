@@ -11,15 +11,15 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+import com.revrobotics.CANPIDController; 
+import com.revrobotics.CANSparkmax; 
+import com.revrobotics.CANEncoder; 
+import com.revrobotics.ControlType; 
+import com.revrobotics.EncoderType; 
+//import com.revrobotics.MotorType; 
+//import com.revrobotics.XboxController; 
 
-
-
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.XboxController; 
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,8 +34,9 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  public static CANSparkMax HuddysSpark;
-  public static XboxController Controller;
+  public static CANSparkMax andreasSparkMax; 
+
+  public static XboxController controller; 
 
 
   /**
@@ -48,13 +49,12 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    HuddysSpark = new CANSparkMax(5, MotorType.kBrushless);
+    andreasSparkMax = new CANSparkMax(2, MotorType.kBrushless);
 
-    Controller = new XboxController(1);
+    controller = new XboxController(1); 
 
+    andreasSparkMax.setIdlrMode(IdleMode.kBrake);
 
-    HuddysSpark.setIdleMode(IdleMode.kBrake);
-    
 
   }
 
@@ -108,11 +108,14 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
+
+
   @Override
   public void teleopPeriodic() {
-
-    HuddysSpark.set(Controller.getRawAxis(5));
   
+    andreasSparkMax.set(-1);
+    andreasSparkMax.set(controller.getRawAxis(1)); 
+
   }
 
   /**
