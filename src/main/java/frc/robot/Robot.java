@@ -22,6 +22,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -112,11 +113,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
 
-    double value = controller.getX(Hand.kRight);
+    double value = controller.getX(Hand.kLeft);
+
+    SmartDashboard.putNumber("value", value);
 
 
-
-    micahSparkMax.set(0.0);
+   // micahSparkMax.set(0.0);
 
     // I think the integer in .set(here) needs to be directly correlated to the left c-stick via variable.
   
