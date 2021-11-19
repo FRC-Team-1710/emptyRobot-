@@ -10,12 +10,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import static edu.wpi.first.wpilibj.Solenoid.Value;  
 
 import com.revrobotics.CANPIDController; 
 import com.revrobotics.CANSparkmax; 
 import com.revrobotics.CANEncoder; 
 import com.revrobotics.ControlType; 
 import com.revrobotics.EncoderType; 
+
 //import com.revrobotics.MotorType; 
 //import com.revrobotics.XboxController; 
 
@@ -35,9 +37,10 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   public static CANSparkMax andreasSparkMax; 
-
+  
   public static XboxController controller; 
 
+  public static Solenoid andreaSolenoid; 
 
   /**
    * This function is run when the robot is first started up and should be
@@ -55,7 +58,7 @@ public class Robot extends TimedRobot {
 
     andreasSparkMax.setIdlrMode(IdleMode.kBrake);
 
-
+    andreaSolenoid = new Solenoid(1); 
   }
 
   /**
@@ -113,8 +116,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
   
-    andreasSparkMax.set(-1);
-    andreasSparkMax.set(controller.getRawAxis(1)); 
+    if(controller.getAButton()){
+      andreaSolenoid(kforward);       
+    }
+    else{
+      andreaSolenoid(kReverse); 
+    } 
 
   }
 
