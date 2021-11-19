@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Solenoid;
 
 
 import com.revrobotics.CANPIDController;
@@ -39,7 +40,7 @@ public class Robot extends TimedRobot {
 
   public static CANSparkMax micahSparkMax;
   public static XboxController controller;
-
+  public static Solenoid micahSolenoid;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -57,6 +58,10 @@ public class Robot extends TimedRobot {
     controller = new XboxController(0);
 
     micahSparkMax.setIdleMode(IdleMode.kBrake);
+
+    Solenoid micahSolenoid = new Solenoid(1);
+    
+    
 
   }
 
@@ -118,12 +123,28 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("value", value);
 
+    boolean pannenkoek = controller.getAButton();
+
+    if (pannenkoek == true) {
+
+      micahSolenoid.set(true);
+
+    }else{
+
+      micahSolenoid.set(false);
+
+    }
+
+
+
+    
 
    // micahSparkMax.set(0.0);
 
     // I think the integer in .set(here) needs to be directly correlated to the left c-stick via variable.
   
   }
+
 
   /**
    * This function is called periodically during test mode.
