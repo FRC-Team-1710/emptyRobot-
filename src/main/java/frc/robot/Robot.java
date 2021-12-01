@@ -18,6 +18,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.EncoderType;
 import com.revrobotics.MotorType;
 import edu.wpi.first.wpilibj.XboxController;
+import edy.wpi.first.wpilibj.Solenoid;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,6 +37,8 @@ public static CANSparkMax kennedysSparkMax;
 
 public static XboxController controller;
 
+public static Solenoid kensSolenoid;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -48,6 +51,9 @@ public static XboxController controller;
 
 
   kennedysSparkMax = new CANSparkMax(2, MotorType.kBrushless);
+
+  kensSolenoid = new Solenoid(1);
+ /* kensSolenoid.sedIdleMode(IdleMode.kReverse)*/
 
   controller = new XboxController(1);
 
@@ -108,10 +114,16 @@ public static XboxController controller;
   @Override
   public void teleopPeriodic() {
 
-    kennedysSparkMax.set(-1);
 
     kennedysSpark.set(controller.getRawAxis(1));
   
+    if(controller.getAButton()){
+       kensSolenoid(kForward);
+    } else {
+      kensSolenoid(kReverse);
+    }
+    
+
   }
 
   /**
