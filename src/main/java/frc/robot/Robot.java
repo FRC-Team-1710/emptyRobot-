@@ -111,16 +111,16 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
-
+//epepepepepep
 
   @Override
   public void teleopPeriodic() {
   
     if(controller.getAButton()){
-      andreaSolenoid(kforward);       
+      andreaSolenoid.set(kforward);       
     }
     else{
-      andreaSolenoid(kReverse); 
+      andreaSolenoid.set(kReverse); 
     } 
 
   }
